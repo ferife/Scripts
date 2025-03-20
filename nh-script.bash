@@ -20,19 +20,19 @@ upgradeFlakeLock=""
 upgradeNixvim=""
 dryUpdate=""
 cleanUpdate=""
-while getopts "houndc" flag; do
+while getopts "unhodc" flag; do
   case "$flag" in
-    h)  # Update home manager
-      updateHome="1"
-      ;;
-    o)  # Update the OS
-      updateOS="1"
-      ;;
     u)  # Update flake.lock
       upgradeFlakeLock="1"
       ;;
     n)  # Update just the nixvim input in flake.lock
       upgradeNixvim="1"
+      ;;
+    h)  # Update home manager
+      updateHome="1"
+      ;;
+    o)  # Update the OS
+      updateOS="1"
       ;;
     d)  # Do a dry update
       dryUpdate="1"
