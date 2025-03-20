@@ -4,6 +4,15 @@
 # To view that NixOS config, go to my nixConfig repository
 # The nixvim being referred to below is my Nix-based Neovim config, viewable within my nvimConfig repository
 
+# Tools required for this script:
+# git
+# nixOS
+# home manager
+# nh
+
+# Step -1: Check to make sure that any necessary packages are installed
+# TODO: Check to make sure that any necessary packages are installed
+
 # Step 0: Handle flags and set path variable
 updateHome=""
 updateOS=""
