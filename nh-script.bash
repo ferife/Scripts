@@ -32,7 +32,7 @@ while getopts "houndc" flag; do
       cleanUpdate="1"
       ;;
     *)  # There was an option that doesn't exist
-      echo "You've use a flag that doesn't exist. Exiting program with failure"
+      echo "You've used a flag that doesn't exist. Exiting program with failure"
       exit 1
       ;;
   esac
