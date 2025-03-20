@@ -98,7 +98,7 @@ fi
 
 # Step 6: Clean?
 if [ "$cleanUpdate" ]; then
-  nh clean all --ask --keep 10
+  /run/current-system/sw/bin/nh clean all --ask --keep 10
 fi
 
 # Step 7: Go back and execute shell
