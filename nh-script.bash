@@ -9,6 +9,7 @@
 # nixOS
 # home manager
 # nh
+# alejandra
 
 # Step -1: Check to make sure that any necessary packages are installed
 # TODO: Check to make sure that any necessary packages are installed
@@ -20,13 +21,17 @@ upgradeFlakeLock=""
 upgradeNixvim=""
 dryUpdate=""
 cleanUpdate=""
-while getopts "unhodc" flag; do
+noAutoFormat=""
+while getopts "unfhodc" flag; do
   case "$flag" in
     u)  # Update flake.lock
       upgradeFlakeLock="1"
       ;;
     n)  # Update just the nixvim input in flake.lock
       upgradeNixvim="1"
+      ;;
+    f) # DON'T auto format
+      noAutoFormat="1"
       ;;
     h)  # Update home manager
       updateHome="1"
@@ -73,10 +78,18 @@ elif [ "$upgradeNixvim" ]; then
   nix flake update nixvim-config
 fi
 
-# Step 3: Add to git stage
+# Step 3: Auto-formatting
+if [ "$noAutoFormat" ]; then
+  echo "Skip auto-formatting"
+else
+  echo "Auto-formatting .nix files"
+  alejandra .
+fi
+
+# Step 4: Add to git stage
 git add .
 
-# Step 4: Rebuild Home Manager
+# Step 5: Rebuild Home Manager
 if [ "$updateHome" ]; then
   git add .
   homeString="/run/current-system/sw/bin/nh home switch"
@@ -92,7 +105,7 @@ if [ "$updateHome" ]; then
   $homeString
 fi
 
-# Step 5: Rebuild OS
+# Step 6: Rebuild OS
 if [ "$updateOS" ]; then
   git add .
   osString="/run/current-system/sw/bin/nh os switch"
@@ -105,12 +118,12 @@ if [ "$updateOS" ]; then
   $osString
 fi
 
-# Step 6: Clean?
+# Step 7: Clean?
 if [ "$cleanUpdate" ]; then
   /run/current-system/sw/bin/nh clean all --ask --keep 10
 fi
 
-# Step 7: Go back and execute shell
+# Step 8: Go back and execute shell
 # Shell is executed so that shell aliases and enviroment variables are reset
 cd - || exit 1
 exec "$SHELL"
