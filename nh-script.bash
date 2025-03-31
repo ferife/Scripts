@@ -78,16 +78,16 @@ elif [ "$upgradeNixvim" ]; then
   nix flake update nixvim-config
 fi
 
-# Step 3: Auto-formatting
+# Step 3: Add to git stage
+git add .
+
+# Step 4: Auto-formatting
 if [ "$noAutoFormat" ]; then
   echo "Skip auto-formatting"
 else
   echo "Auto-formatting .nix files"
   alejandra .
 fi
-
-# Step 4: Add to git stage
-git add .
 
 # Step 5: Rebuild Home Manager
 if [ "$updateHome" ]; then
