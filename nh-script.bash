@@ -4,15 +4,36 @@
 # To view that NixOS config, go to my nixConfig repository
 # The nixvim being referred to below is my Nix-based Neovim config, viewable within my nvimConfig repository
 
-# Tools required for this script:
-# git
-# nixOS
-# home manager
-# nh
-# alejandra
-
 # Step -1: Check to make sure that any necessary packages are installed
-# TODO: Check to make sure that any necessary packages are installed
+missingDependencies=0
+if [ ! "$(command -v getopts 2> /dev/null)" ]; then
+  echo "ERROR: getopts not found"
+  ((missingDependencies++))
+fi
+if [ ! "$(command -v git 2> /dev/null)" ]; then
+  echo "ERROR: git not found"
+  ((missingDependencies++))
+fi
+if [ ! "$(command -v home-manager 2> /dev/null)" ]; then
+  echo "ERROR: home manager not found"
+  ((missingDependencies++))
+fi
+if [ ! "$(command -v nix 2> /dev/null)" ]; then
+  echo "ERROR: nix not found"
+  ((missingDependencies++))
+fi
+if [ ! "$(command -v nh 2> /dev/null)" ]; then
+  echo "ERROR: nh not found"
+  ((missingDependencies++))
+fi
+if [ ! "$(command -v alejandra 2> /dev/null)" ]; then
+  echo "ERROR: alejandra not found"
+  ((missingDependencies++))
+fi
+if [ "$missingDependencies" -gt 0 ]; then
+  echo "Missing dependencies: $missingDependencies"
+  exit 1
+fi
 
 # Step 0: Handle flags and set path variable
 updateHome=""
@@ -91,7 +112,6 @@ fi
 
 # Step 5: Rebuild Home Manager
 if [ "$updateHome" ]; then
-  git add .
   homeString="/run/current-system/sw/bin/nh home switch"
   if [ "$dryUpdate" ]; then
     homeString="$homeString --dry"
@@ -107,7 +127,6 @@ fi
 
 # Step 6: Rebuild OS
 if [ "$updateOS" ]; then
-  git add .
   osString="/run/current-system/sw/bin/nh os switch"
   if [ "$dryUpdate" ]; then
     osString="$osString --dry"
