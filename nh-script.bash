@@ -4,6 +4,8 @@
 # To view that NixOS config, go to my nixConfig repository
 # The nixvim being referred to below is my Nix-based Neovim config, viewable within my nvimConfig repository
 
+# TODO: Move this into my nixConfig using writeShellScriptBin
+
 # Step -1: Check to make sure that any necessary packages are installed
 missingDependencies=0
 if [ ! "$(command -v getopts 2> /dev/null)" ]; then
