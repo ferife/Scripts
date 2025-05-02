@@ -142,6 +142,7 @@ fi
 # Step 7: Clean?
 if [ "$cleanUpdate" ]; then
   /run/current-system/sw/bin/nh clean all --ask --keep 10
+  nix store optimise
 fi
 
 # Step 8: Go back and execute shell
