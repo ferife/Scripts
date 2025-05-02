@@ -38,14 +38,15 @@ if [ "$missingDependencies" -gt 0 ]; then
 fi
 
 # Step 0: Handle flags and set path variable
-updateHome=""
-updateOS=""
 upgradeFlakeLock=""
 upgradeNixvim=""
+noAutoFormat=""
+updateHome=""
+updateOS=""
+updateFirmware=""
 dryUpdate=""
 cleanUpdate=""
-noAutoFormat=""
-while getopts "unfhodc" flag; do
+while getopts "unfhoFdc" flag; do
   case "$flag" in
     u)  # Update flake.lock
       upgradeFlakeLock="1"
@@ -61,6 +62,9 @@ while getopts "unfhodc" flag; do
       ;;
     o)  # Update the OS
       updateOS="1"
+      ;;
+    F)  # Update firmware
+      updateFirmware="1"
       ;;
     d)  # Do a dry update
       dryUpdate="1"
@@ -137,6 +141,12 @@ if [ "$updateOS" ]; then
   fi
   osString="$osString --hostname $FLAKE_HOSTNAME"
   $osString
+fi
+
+# Step 7: Update firmware
+if [ "$updateFirmware" ]; then
+  fwupdmgr refresh
+  fwupdmgr update
 fi
 
 # Step 7: Clean?
