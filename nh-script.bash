@@ -94,7 +94,7 @@ cd "$path" || (echo "cd failed for some reason" && exit 1)
 # Error handling: Ensure there is a flake.nix here
 if [ ! -f "flake.nix" ] || { [ ! -d ".git" ] && [ ! -f ".git" ]; }; then
   echo "There's no flake.nix and/or git repo in $path, dumbass"
-  cd - || exit 1
+  cd "$cwd" || exit 1
   exit 1
 fi
 
@@ -103,6 +103,19 @@ if [ "$upgradeFlakeLock" ]; then
   nix flake update
 elif [ "$upgradeNixvim" ]; then
   nix flake update nixvim-config
+fi
+
+if [ "$upgradeFlakeLock" ] || [ "$upgradeNixvim" ]; then
+  cd "$HOME/Documents/Configs/nvimConfig/nvimConfig-main" || (echo "cd into nvimConfig failed for some reason" && exit 1)
+  alejandra .
+  nix flake update
+  if [ -n "$(git diff HEAD -- flake.lock)" ]; then
+    git reset HEAD -- .
+    git add ./flake.lock
+    git commit -m "Update flake.lock through gas script"
+    git push
+  fi
+  cd "$path" || (echo "cd out of nvimConfig failed for some reason" && exit 1)
 fi
 
 # Step 3: Add to git stage
@@ -157,5 +170,5 @@ fi
 
 # Step 8: Go back and execute shell
 # Shell is executed so that shell aliases and enviroment variables are reset
-cd - || exit 1
+cd "$cwd" || exit 1
 exec "$SHELL"
