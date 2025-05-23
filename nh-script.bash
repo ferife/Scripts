@@ -149,7 +149,24 @@ if [ "$updateHome" ]; then
     fi
   fi
   homeString="$homeString --configuration $USERNAME@$FLAKE_HOSTNAME"
+
+  # Back up Floorp profiles
+  if [ ! "$dryUpdate" ] && [ "$FLOORP_ACTIVE" ]; then
+    echo ""
+    echo "Backing up Floorp profiles"
+    echo ""
+    bash "$HOME/Documents/Scripts/reload-floorp-profile.bash -b"
+  fi
+
   $homeString
+
+  # Sync Floorp profile with backup
+  if [ ! "$dryUpdate" ] && [ "$FLOORP_ACTIVE" ]; then
+    echo ""
+    echo "Loading Floorp profiles from backups"
+    echo ""
+    bash "$HOME/Documents/Scripts/reload-floorp-profile.bash"
+  fi
 fi
 
 # Step 6: Rebuild OS
