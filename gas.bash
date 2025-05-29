@@ -148,7 +148,7 @@ if [ "$updateHome" ]; then
       homeString="$homeString --ask"
     fi
   fi
-  homeString="$homeString --configuration $USERNAME@$FLAKE_HOSTNAME"
+  homeString="$homeString --configuration $USER@$FLAKE_HOSTNAME"
 
   # Back up Floorp profiles
   if [ ! "$dryUpdate" ] && [ "$FLOORP_ACTIVE" ]; then
