@@ -99,7 +99,7 @@ if [ ! -f "flake.nix" ] || { [ ! -d ".git" ] && [ ! -f ".git" ]; }; then
 fi
 
 # Step 2: Upgrade flake.lock/nixvim?
-if [ "$upgradeFlakeLock" ]; then
+if [ "$upgradeFlakeLock" ] && [ ! "$updateOS" ] && [ ! "$updateHome" ]; then
   nix flake update
 elif [ "$upgradeNixvim" ]; then
   nix flake update nixvim-config
@@ -131,7 +131,15 @@ fi
 
 # Step 5: Rebuild Home Manager
 if [ "$updateHome" ]; then
-  homeString="/run/current-system/sw/bin/nh home switch"
+  homeString="nh home switch"
+
+  # Update flake.lock/nixvim
+  if [ "$upgradeFlakeLock" ]; then
+    homeString="$homeString --update"
+  elif [ "$upgradeNixvim" ]; then
+    homeString="$homeString --update-input nixvim-config"
+  fi
+
   if [ "$dryUpdate" ]; then
     homeString="$homeString --dry"
   else
@@ -146,7 +154,17 @@ fi
 
 # Step 6: Rebuild OS
 if [ "$updateOS" ]; then
-  osString="/run/current-system/sw/bin/nh os switch"
+  osString="nh os switch"
+
+  # Update flake.lock/nixvim
+  if [ ! "$updateHome" ]; then
+    if [ "$upgradeFlakeLock" ]; then
+      osString="$osString --update"
+    elif [ "$upgradeNixvim" ]; then
+      osString="$osString --update-input nixvim-config"
+    fi
+  fi
+
   if [ "$dryUpdate" ]; then
     osString="$osString --dry"
   else
@@ -164,7 +182,7 @@ fi
 
 # Step 7: Clean?
 if [ "$cleanUpdate" ]; then
-  /run/current-system/sw/bin/nh clean all --ask --keep 10
+  nh clean all --ask --keep-since 7d --keep 10
   nix store optimise
 fi
 
