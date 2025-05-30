@@ -129,6 +129,8 @@ else
   alejandra .
 fi
 
+# nh home switch --ask --backup-extension backup --configuration fernandorf@laptop
+
 # Step 5: Rebuild Home Manager
 if [ "$updateHome" ]; then
   homeString="nh home switch"
@@ -168,6 +170,8 @@ if [ "$updateHome" ]; then
     bash "$HOME/Documents/Scripts/reload-floorp-profile.bash"
   fi
 fi
+
+# nh os switch --ask --hostname laptop
 
 # Step 6: Rebuild OS
 if [ "$updateOS" ]; then
